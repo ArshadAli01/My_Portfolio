@@ -4,23 +4,40 @@ import './Hero.css'
 export function Hero() {
   const [displayText, setDisplayText] = useState('')
   const [showCursor, setShowCursor] = useState(true)
+  const [isDeleting, setIsDeleting] = useState(false)
   const fullText = "Hello, I'm Arshad Ali."
   const typingSpeed = 100
+  const deletingSpeed = 50
+  const pauseTime = 1500
 
   useEffect(() => {
-    let currentIndex = 0
+    let currentIndex = displayText.length
+    let timeoutId
 
-    const typeInterval = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setDisplayText(fullText.slice(0, currentIndex))
-        currentIndex++
-      } else {
-        clearInterval(typeInterval)
-      }
-    }, typingSpeed)
+    if (!isDeleting && currentIndex < fullText.length) {
+      // Typing phase
+      timeoutId = setTimeout(() => {
+        setDisplayText(fullText.slice(0, currentIndex + 1))
+      }, typingSpeed)
+    } else if (!isDeleting && currentIndex === fullText.length) {
+      // Pause at the end of typing
+      timeoutId = setTimeout(() => {
+        setIsDeleting(true)
+      }, pauseTime)
+    } else if (isDeleting && currentIndex > 0) {
+      // Deleting phase
+      timeoutId = setTimeout(() => {
+        setDisplayText(fullText.slice(0, currentIndex - 1))
+      }, deletingSpeed)
+    } else if (isDeleting && currentIndex === 0) {
+      // Pause at the beginning and start typing again
+      timeoutId = setTimeout(() => {
+        setIsDeleting(false)
+      }, pauseTime)
+    }
 
-    return () => clearInterval(typeInterval)
-  }, [])
+    return () => clearTimeout(timeoutId)
+  }, [displayText, isDeleting])
 
   useEffect(() => {
     const cursorInterval = setInterval(() => {
@@ -53,8 +70,9 @@ export function Hero() {
             <span className={`cursor ${showCursor ? 'visible' : 'hidden'}`}>|</span>
           </h1>
           <p>
-            A passionate developer crafting elegant solutions to complex problems.
-            Specializing in web development and user experience design.
+            Passionate software engineer with hands-on experience in front-end development using React and back-end technologies like Java, Spring Boot, and PostgreSQL.
+            Skilled in debugging, writing clean code, and building maintainable systems. 
+            Currently exploring Ml and Big Data to expand technical depth and stay current with emerging trends.
           </p>
           <div className="hero-buttons">
             <button className="btn-primary" onClick={scrollToProjects}>View My Work</button>
