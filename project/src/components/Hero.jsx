@@ -73,6 +73,7 @@ export function Hero() {
             Passionate software engineer with hands-on experience in front-end development using React and back-end technologies like Java, Spring Boot, and PostgreSQL.
             Skilled in debugging, writing clean code, and building maintainable systems. 
             Currently exploring Ml and Big Data to expand technical depth and stay current with emerging trends.
+
           </p>
           <div className="hero-buttons">
             <button className="btn-primary" onClick={scrollToProjects}>View My Work</button>
